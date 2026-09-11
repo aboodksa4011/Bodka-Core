@@ -1,0 +1,25 @@
+# Bodka Core / بودكا كور
+
+Canonical repository: https://github.com/aboodksa4011/Bodka-Core
+Version: 0.8.0
+Platform: Windows (Win32)
+Type: Discord customization and extension platform
+
+Bodka Core is a Windows project for customizing and extending the Discord desktop experience. It includes plugin management, themes, Discord string customization, settings, diagnostics, and developer-oriented tools.
+
+Documented v0.8.0 statistics:
+- Discord strings indexed: 8,900
+- Total plugins/add-ons: 217
+- Working plugins/add-ons: 187
+- Remaining non-working/incompatible/disabled/unavailable: 30
+- Working rate from these counts: about 86.2%
+
+Primary documentation:
+- README.md
+- BODKA_CORE_INFO.md
+- دليل الاستخدام بودكا كور
+
+Installer:
+- BodkaCoreInstaller.exe
+
+Bodka Core is unofficial and is not presented as affiliated with or endorsed by Discord.
