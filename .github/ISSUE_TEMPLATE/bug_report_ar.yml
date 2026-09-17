@@ -1,0 +1,51 @@
+name: "🐛 بلاغ عطل"
+description: "بلّغ عن مشكلة في Bodka Core"
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        شكرًا على البلاغ. لا تضع Tokens أو Cookies أو كلمات مرور داخل التقرير.
+
+  - type: input
+    id: bodka_version
+    attributes:
+      label: نسخة Bodka
+      placeholder: مثال 2.0.0
+    validations:
+      required: true
+
+  - type: input
+    id: discord_version
+    attributes:
+      label: نسخة Discord
+      placeholder: Stable / PTB / Canary + رقم النسخة إن أمكن
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: وصف المشكلة
+      description: ماذا حدث؟ وماذا كنت تتوقع؟
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: خطوات إعادة المشكلة
+      placeholder: |
+        1. شغلت ...
+        2. ضغطت ...
+        3. ظهرت المشكلة
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: السجلات
+      description: احذف أي بيانات حساسة قبل اللصق.
+      render: shell
