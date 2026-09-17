@@ -1,0 +1,25 @@
+name: "✨ طلب ميزة"
+description: "اقترح ميزة أو تحسين لـ Bodka Core"
+title: "[Feature] "
+labels: ["enhancement"]
+body:
+  - type: input
+    id: title
+    attributes:
+      label: الفكرة باختصار
+    validations:
+      required: true
+
+  - type: textarea
+    id: reason
+    attributes:
+      label: ما المشكلة التي تحلها؟
+    validations:
+      required: true
+
+  - type: textarea
+    id: details
+    attributes:
+      label: كيف تتخيل الميزة؟
+    validations:
+      required: true
