@@ -1,0 +1,103 @@
+name: Discord Instant Notify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, reopened, synchronize, closed]
+  issues:
+    types: [opened, reopened, closed]
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  notify-discord:
+    runs-on: ubuntu-latest
+    env:
+      WEBHOOK: ${{ secrets.DISCORD_GITHUB_WEBHOOK }}
+    steps:
+      - name: Skip safely when webhook secret is missing
+        shell: bash
+        run: |
+          if [ -z "$WEBHOOK" ]; then
+            echo "DISCORD_GITHUB_WEBHOOK is not configured yet. Skipping notification."
+            exit 0
+          fi
+
+      - name: Build and send Discord notification
+        if: ${{ env.WEBHOOK != '' }}
+        shell: bash
+        run: |
+          EVENT="${{ github.event_name }}"
+          REPO="${{ github.repository }}"
+          ACTOR="${{ github.actor }}"
+          SHA="${{ github.sha }}"
+          SHORT_SHA="${SHA:0:7}"
+          TITLE="GitHub update: ${EVENT}"
+          DESCRIPTION="Repository: ${REPO}\nBy: ${ACTOR}"
+          URL="https://github.com/${REPO}"
+
+          case "$EVENT" in
+            push)
+              MSG=$(jq -r '.head_commit.message // "New push"' "$GITHUB_EVENT_PATH")
+              BRANCH="${GITHUB_REF_NAME}"
+              TITLE="New commit on ${BRANCH}"
+              DESCRIPTION="${MSG}\n\nCommit: ${SHORT_SHA}\nBy: ${ACTOR}"
+              URL="https://github.com/${REPO}/commit/${SHA}"
+              ;;
+            pull_request)
+              NUMBER=$(jq -r '.pull_request.number' "$GITHUB_EVENT_PATH")
+              PR_TITLE=$(jq -r '.pull_request.title' "$GITHUB_EVENT_PATH")
+              ACTION=$(jq -r '.action' "$GITHUB_EVENT_PATH")
+              TITLE="Pull Request #${NUMBER} ${ACTION}"
+              DESCRIPTION="${PR_TITLE}\nBy: ${ACTOR}"
+              URL=$(jq -r '.pull_request.html_url' "$GITHUB_EVENT_PATH")
+              ;;
+            issues)
+              NUMBER=$(jq -r '.issue.number' "$GITHUB_EVENT_PATH")
+              ISSUE_TITLE=$(jq -r '.issue.title' "$GITHUB_EVENT_PATH")
+              ACTION=$(jq -r '.action' "$GITHUB_EVENT_PATH")
+              TITLE="Issue #${NUMBER} ${ACTION}"
+              DESCRIPTION="${ISSUE_TITLE}\nBy: ${ACTOR}"
+              URL=$(jq -r '.issue.html_url' "$GITHUB_EVENT_PATH")
+              ;;
+            release)
+              RELEASE_NAME=$(jq -r '.release.name // .release.tag_name' "$GITHUB_EVENT_PATH")
+              TITLE="New Bodka Core release"
+              DESCRIPTION="${RELEASE_NAME}\nPublished by: ${ACTOR}"
+              URL=$(jq -r '.release.html_url' "$GITHUB_EVENT_PATH")
+              ;;
+            workflow_dispatch)
+              TITLE="Bodka GitHub instant notification test"
+              DESCRIPTION="Instant Discord notification is connected.\nTriggered by: ${ACTOR}"
+              URL="https://github.com/${REPO}/actions"
+              ;;
+          esac
+
+          PAYLOAD=$(jq -n \
+            --arg username "Bodka GitHub" \
+            --arg title "$TITLE" \
+            --arg description "$DESCRIPTION" \
+            --arg url "$URL" \
+            --arg footer "Bodka Core • GitHub" \
+            '{
+              username: $username,
+              allowed_mentions: {parse: []},
+              embeds: [{
+                title: $title,
+                description: $description,
+                url: $url,
+                color: 9133302,
+                footer: {text: $footer},
+                timestamp: (now | todateiso8601)
+              }]
+            }')
+
+          curl --fail-with-body --silent --show-error \
+            -H "Content-Type: application/json" \
+            -d "$PAYLOAD" \
+            "$WEBHOOK"
