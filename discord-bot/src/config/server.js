@@ -54,7 +54,7 @@ export const CHANNELS = [
   { key: "rules", category: "start", name: "📜・القوانين", type: ChannelType.GuildText, topic: "قوانين سيرفر Bodka Core والموافقة عليها." },
   { key: "verify", category: "start", name: "✅・التحقق", type: ChannelType.GuildText, topic: "اضغط زر الموافقة للوصول لبقية السيرفر." },
   { key: "roles", category: "start", name: "🎭・اختيار-الرتب", type: ChannelType.GuildText, topic: "اختر اهتماماتك وإشعاراتك." },
-  { key: "announcements", category: "start", name: "📢・الإعلانات", type: ChannelType.GuildAnnouncement, topic: "الإعلانات الرسمية للمشروع والسيرفر." },
+  { key: "announcements", category: "start", name: "📢・الإعلانات", type: ChannelType.GuildText, topic: "الإعلانات الرسمية للمشروع والسيرفر." },
   { key: "downloads", category: "bodka", name: "⬇️・تحميل-بودكا", type: ChannelType.GuildText, topic: "روابط التحميل الرسمية فقط." },
   { key: "releases", category: "bodka", name: "🚀・الإصدارات", type: ChannelType.GuildText, topic: "آخر إصدارات Bodka Core." },
   { key: "changelog", category: "bodka", name: "📝・سجل-التغييرات", type: ChannelType.GuildText, topic: "ما الذي تغيّر في كل إصدار." },
