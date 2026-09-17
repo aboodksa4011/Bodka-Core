@@ -1,0 +1,32 @@
+name: فحص بوت ديسكورد
+
+on:
+  push:
+    paths:
+      - "discord-bot/**"
+      - ".github/workflows/discord-bot-ci.yml"
+  pull_request:
+    paths:
+      - "discord-bot/**"
+      - ".github/workflows/discord-bot-ci.yml"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: discord-bot
+    steps:
+      - name: جلب المستودع
+        uses: actions/checkout@v4
+
+      - name: تجهيز Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: تثبيت الحزم
+        run: npm install --ignore-scripts
+
+      - name: فحص Syntax
+        run: npm run check
